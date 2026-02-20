@@ -1,0 +1,10 @@
+vendor/
+node_modules/
+.git/
+.idea/
+.env.backup
+storage/logs/*.log
+docker/mysql-data/
+*.swp
+*.swo
+.DS_Store

@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: trending-app
+    ports:
+      - "8080:8000"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - trending-topics-net
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  mysql:
+    image: mysql:8.0
+    container_name: trending-mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: trending_topics
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - trending-mysql-data:/var/lib/mysql
+    networks:
+      - trending-topics-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: trending-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - trending-redis-data:/data
+    networks:
+      - trending-topics-net
+
+volumes:
+  trending-mysql-data:
+  trending-redis-data:
+
+networks:
+  trending-topics-net:
+    driver: bridge
