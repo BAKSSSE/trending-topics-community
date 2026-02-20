@@ -145,6 +145,18 @@
 5) 캐시/큐 필요 여부
 6) 테스트 계획
 
+## 12) DB 프로시저 / 트리거 사용 금지 정책
+
+사용 금지 항목: 
+
+다음 MySQL 기능은 프로젝트에서 사용하지 않는다:
+•	Stored Procedure
+•	Stored Function
+•	Trigger
+•	Event Scheduler
+•	DB 내부 자동 상태 변경 로직
+
+
 구현은 작은 PR 단위로 나눈다.
 운영 성능에 영향이 있는 변경은 쿼리 + 인덱스 전략을 함께 제시한다.
 커밋 메시지에 Co-Authored-By 라인을 포함하지 않는다.
